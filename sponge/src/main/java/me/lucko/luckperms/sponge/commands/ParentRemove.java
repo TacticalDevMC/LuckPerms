@@ -29,8 +29,7 @@ import me.lucko.luckperms.common.command.CommandResult;
 import me.lucko.luckperms.common.command.abstraction.ChildCommand;
 import me.lucko.luckperms.common.command.access.CommandPermission;
 import me.lucko.luckperms.common.command.utils.ArgumentList;
-import me.lucko.luckperms.common.locale.LocaleManager;
-import me.lucko.luckperms.common.locale.command.CommandSpec;
+import me.lucko.luckperms.common.command.spec.CommandSpec;
 import me.lucko.luckperms.common.locale.message.Message;
 import me.lucko.luckperms.common.plugin.LuckPermsPlugin;
 import me.lucko.luckperms.common.sender.Sender;
@@ -45,8 +44,8 @@ import net.luckperms.api.context.ImmutableContextSet;
 import org.spongepowered.api.Sponge;
 
 public class ParentRemove extends ChildCommand<LPSubjectData> {
-    public ParentRemove(LocaleManager locale) {
-        super(CommandSpec.SPONGE_PARENT_REMOVE.localize(locale), "remove", CommandPermission.SPONGE_PARENT_REMOVE, Predicates.inRange(0, 1));
+    public ParentRemove() {
+        super(CommandSpec.SPONGE_PARENT_REMOVE, "remove", CommandPermission.SPONGE_PARENT_REMOVE, Predicates.inRange(0, 1));
     }
 
     @Override

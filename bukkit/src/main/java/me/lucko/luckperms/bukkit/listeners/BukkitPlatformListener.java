@@ -75,7 +75,7 @@ public class BukkitPlatformListener implements Listener {
 
         if (OP_COMMAND_PATTERN.matcher(cmdLine).matches()) {
             event.setCancelled(true);
-            sender.sendMessage(Message.OP_DISABLED.asString(this.plugin.getLocaleManager()));
+            Message.OP_DISABLED.send(this.plugin.getSenderFactory().wrap(sender));
         }
     }
 

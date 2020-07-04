@@ -29,8 +29,7 @@ import me.lucko.luckperms.common.command.CommandResult;
 import me.lucko.luckperms.common.command.abstraction.ChildCommand;
 import me.lucko.luckperms.common.command.access.CommandPermission;
 import me.lucko.luckperms.common.command.utils.ArgumentList;
-import me.lucko.luckperms.common.locale.LocaleManager;
-import me.lucko.luckperms.common.locale.command.CommandSpec;
+import me.lucko.luckperms.common.command.spec.CommandSpec;
 import me.lucko.luckperms.common.locale.message.Message;
 import me.lucko.luckperms.common.plugin.LuckPermsPlugin;
 import me.lucko.luckperms.common.sender.Sender;
@@ -40,8 +39,8 @@ import me.lucko.luckperms.sponge.service.model.LPSubjectData;
 import net.luckperms.api.context.ImmutableContextSet;
 
 public class PermissionClear extends ChildCommand<LPSubjectData> {
-    public PermissionClear(LocaleManager locale) {
-        super(CommandSpec.SPONGE_PERMISSION_CLEAR.localize(locale), "clear", CommandPermission.SPONGE_PERMISSION_CLEAR, Predicates.alwaysFalse());
+    public PermissionClear() {
+        super(CommandSpec.SPONGE_PERMISSION_CLEAR, "clear", CommandPermission.SPONGE_PERMISSION_CLEAR, Predicates.alwaysFalse());
     }
 
     @Override

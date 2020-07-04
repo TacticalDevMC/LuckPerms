@@ -33,8 +33,7 @@ import me.lucko.luckperms.common.command.tabcomplete.TabCompleter;
 import me.lucko.luckperms.common.command.utils.ArgumentList;
 import me.lucko.luckperms.common.config.ConfigKeys;
 import me.lucko.luckperms.common.http.UnsuccessfulRequestException;
-import me.lucko.luckperms.common.locale.LocaleManager;
-import me.lucko.luckperms.common.locale.command.CommandSpec;
+import me.lucko.luckperms.common.command.spec.CommandSpec;
 import me.lucko.luckperms.common.locale.message.Message;
 import me.lucko.luckperms.common.plugin.LuckPermsPlugin;
 import me.lucko.luckperms.common.sender.Sender;
@@ -44,19 +43,19 @@ import me.lucko.luckperms.common.verbose.VerboseFilter;
 import me.lucko.luckperms.common.verbose.VerboseHandler;
 import me.lucko.luckperms.common.verbose.VerboseListener;
 
-import net.kyori.text.Component;
-import net.kyori.text.TextComponent;
-import net.kyori.text.event.ClickEvent;
-import net.kyori.text.event.HoverEvent;
-import net.kyori.text.format.TextColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class VerboseCommand extends SingleCommand {
-    public VerboseCommand(LocaleManager locale) {
-        super(CommandSpec.VERBOSE.localize(locale), "Verbose", CommandPermission.VERBOSE, Predicates.is(0));
+    public VerboseCommand() {
+        super(CommandSpec.VERBOSE, "Verbose", CommandPermission.VERBOSE, Predicates.is(0));
     }
 
     @Override
@@ -176,9 +175,9 @@ public class VerboseCommand extends SingleCommand {
 
                     Message.VERBOSE_RESULTS_URL.send(sender);
 
-                    Component message = TextComponent.builder(url).color(TextColor.AQUA)
+                    Component message = TextComponent.builder(url).color(NamedTextColor.AQUA)
                             .clickEvent(ClickEvent.openUrl(url))
-                            .hoverEvent(HoverEvent.showText(TextComponent.of("Click to open the results page.").color(TextColor.GRAY)))
+                            .hoverEvent(HoverEvent.showText(TextComponent.of("Click to open the results page.").color(NamedTextColor.GRAY)))
                             .build();
 
                     sender.sendMessage(message);

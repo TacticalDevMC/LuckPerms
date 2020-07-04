@@ -40,8 +40,11 @@ import me.lucko.luckperms.common.plugin.util.AbstractConnectionListener;
 import me.lucko.luckperms.velocity.LPVelocityPlugin;
 import me.lucko.luckperms.velocity.service.PlayerPermissionProvider;
 
+import net.kyori.adventure.translation.GlobalTranslationSource;
+
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -104,8 +107,9 @@ public class VelocityConnectionListener extends AbstractConnectionListener {
 
     @Subscribe(order = PostOrder.FIRST)
     public void onPlayerLogin(LoginEvent e) {
-        if (this.deniedLogin.remove(e.getPlayer().getUniqueId())) {
-            e.setResult(ResultedEvent.ComponentResult.denied(Message.LOADING_DATABASE_ERROR.asComponent(this.plugin.getLocaleManager())));
+        final Player player = e.getPlayer();
+        if (this.deniedLogin.remove(player.getUniqueId())) {
+            e.setResult(ResultedEvent.ComponentResult.denied(GlobalTranslationSource.renderer().render(Message.LOADING_DATABASE_ERROR.build(), player.getPlayerSettings().getLocale())));
         }
     }
 
@@ -133,7 +137,7 @@ public class VelocityConnectionListener extends AbstractConnectionListener {
 
             if (this.plugin.getConfiguration().get(ConfigKeys.CANCEL_FAILED_LOGINS)) {
                 // disconnect the user
-                e.setResult(ResultedEvent.ComponentResult.denied(Message.LOADING_STATE_ERROR.asComponent(this.plugin.getLocaleManager())));
+                e.setResult(ResultedEvent.ComponentResult.denied(GlobalTranslationSource.renderer().render(Message.LOADING_STATE_ERROR.build(), player.getPlayerSettings().getLocale())));
             } else {
                 // just send a message
                 this.plugin.getBootstrap().getScheduler().asyncLater(() -> {
@@ -141,7 +145,7 @@ public class VelocityConnectionListener extends AbstractConnectionListener {
                         return;
                     }
 
-                    this.plugin.getSenderFactory().wrap(player).sendMessage(Message.LOADING_STATE_ERROR.asComponent(this.plugin.getLocaleManager()));
+                    Message.LOADING_STATE_ERROR.send(this.plugin.getSenderFactory().wrap(player));
                 }, 1, TimeUnit.SECONDS);
             }
         }

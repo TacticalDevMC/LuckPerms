@@ -32,8 +32,7 @@ import me.lucko.luckperms.common.command.access.ArgumentPermissions;
 import me.lucko.luckperms.common.command.access.CommandPermission;
 import me.lucko.luckperms.common.command.utils.ArgumentList;
 import me.lucko.luckperms.common.command.utils.StorageAssistant;
-import me.lucko.luckperms.common.locale.LocaleManager;
-import me.lucko.luckperms.common.locale.command.CommandSpec;
+import me.lucko.luckperms.common.command.spec.CommandSpec;
 import me.lucko.luckperms.common.locale.message.Message;
 import me.lucko.luckperms.common.model.Group;
 import me.lucko.luckperms.common.plugin.LuckPermsPlugin;
@@ -45,8 +44,8 @@ import net.luckperms.api.event.cause.CreationCause;
 import net.luckperms.api.model.data.DataType;
 
 public class GroupClone extends ChildCommand<Group> {
-    public GroupClone(LocaleManager locale) {
-        super(CommandSpec.GROUP_CLONE.localize(locale), "clone", CommandPermission.GROUP_CLONE, Predicates.not(1));
+    public GroupClone() {
+        super(CommandSpec.GROUP_CLONE, "clone", CommandPermission.GROUP_CLONE, Predicates.not(1));
     }
 
     @Override

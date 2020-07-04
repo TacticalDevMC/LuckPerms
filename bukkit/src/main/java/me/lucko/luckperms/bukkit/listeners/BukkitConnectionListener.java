@@ -25,13 +25,20 @@
 
 package me.lucko.luckperms.bukkit.listeners;
 
+import com.destroystokyo.paper.ClientOption;
+
 import me.lucko.luckperms.bukkit.LPBukkitPlugin;
 import me.lucko.luckperms.bukkit.inject.permissible.LuckPermsPermissible;
 import me.lucko.luckperms.bukkit.inject.permissible.PermissibleInjector;
 import me.lucko.luckperms.common.config.ConfigKeys;
+import me.lucko.luckperms.common.locale.TranslationManager;
 import me.lucko.luckperms.common.locale.message.Message;
 import me.lucko.luckperms.common.model.User;
 import me.lucko.luckperms.common.plugin.util.AbstractConnectionListener;
+
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.kyori.adventure.translation.GlobalTranslationSource;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -43,6 +50,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -122,7 +130,9 @@ public class BukkitConnectionListener extends AbstractConnectionListener impleme
 
             // deny the connection
             this.deniedAsyncLogin.add(e.getUniqueId());
-            e.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, Message.LOADING_DATABASE_ERROR.asString(this.plugin.getLocaleManager()));
+
+            Component reason = GlobalTranslationSource.renderer().render(Message.LOADING_DATABASE_ERROR.build(), Locale.ENGLISH);
+            e.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, LegacyComponentSerializer.legacySection().serialize(reason));
             this.plugin.getEventDispatcher().dispatchPlayerLoginProcess(e.getUniqueId(), e.getName(), null);
         }
     }
@@ -169,7 +179,9 @@ public class BukkitConnectionListener extends AbstractConnectionListener impleme
 
                 if (this.detectedCraftBukkitOfflineMode) {
                     printCraftBukkitOfflineModeError();
-                    e.disallow(PlayerLoginEvent.Result.KICK_OTHER, Message.LOADING_STATE_ERROR_CB_OFFLINE_MODE.asString(this.plugin.getLocaleManager()));
+
+                    Component reason = GlobalTranslationSource.renderer().render(Message.LOADING_STATE_ERROR_CB_OFFLINE_MODE.build(), TranslationManager.parseLocale(player.getLocale()));
+                    e.disallow(PlayerLoginEvent.Result.KICK_OTHER, LegacyComponentSerializer.legacySection().serialize(reason));
                     return;
                 }
 
@@ -179,7 +191,8 @@ public class BukkitConnectionListener extends AbstractConnectionListener impleme
                         " - denying login.");
             }
 
-            e.disallow(PlayerLoginEvent.Result.KICK_OTHER, Message.LOADING_STATE_ERROR.asString(this.plugin.getLocaleManager()));
+            Component reason = GlobalTranslationSource.renderer().render(Message.LOADING_STATE_ERROR.build(), TranslationManager.parseLocale(player.getLocale()));
+            e.disallow(PlayerLoginEvent.Result.KICK_OTHER, LegacyComponentSerializer.legacySection().serialize(reason));
             return;
         }
 
@@ -197,7 +210,8 @@ public class BukkitConnectionListener extends AbstractConnectionListener impleme
                     player.getUniqueId() + " - " + player.getName() + " - denying login.");
             t.printStackTrace();
 
-            e.disallow(PlayerLoginEvent.Result.KICK_OTHER, Message.LOADING_SETUP_ERROR.asString(this.plugin.getLocaleManager()));
+            Component reason = GlobalTranslationSource.renderer().render(Message.LOADING_SETUP_ERROR.build(), TranslationManager.parseLocale(player.getLocale()));
+            e.disallow(PlayerLoginEvent.Result.KICK_OTHER, LegacyComponentSerializer.legacySection().serialize(reason));
             return;
         }
 

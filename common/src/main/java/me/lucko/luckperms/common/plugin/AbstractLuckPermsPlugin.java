@@ -41,8 +41,6 @@ import me.lucko.luckperms.common.event.gen.GeneratedEventClass;
 import me.lucko.luckperms.common.extension.SimpleExtensionManager;
 import me.lucko.luckperms.common.http.BytebinClient;
 import me.lucko.luckperms.common.inheritance.InheritanceGraphFactory;
-import me.lucko.luckperms.common.locale.LocaleManager;
-import me.lucko.luckperms.common.locale.message.Message;
 import me.lucko.luckperms.common.messaging.InternalMessagingService;
 import me.lucko.luckperms.common.messaging.MessagingFactory;
 import me.lucko.luckperms.common.plugin.logging.PluginLogger;
@@ -55,6 +53,8 @@ import me.lucko.luckperms.common.tasks.SyncTask;
 import me.lucko.luckperms.common.treeview.PermissionRegistry;
 import me.lucko.luckperms.common.verbose.VerboseHandler;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.luckperms.api.LuckPerms;
 
 import okhttp3.OkHttpClient;
@@ -78,7 +78,6 @@ public abstract class AbstractLuckPermsPlugin implements LuckPermsPlugin {
     private PermissionRegistry permissionRegistry;
     private LogDispatcher logDispatcher;
     private LuckPermsConfiguration configuration;
-    private LocaleManager localeManager;
     private BytebinClient bytebin;
     private FileWatcher fileWatcher = null;
     private Storage storage;
@@ -114,10 +113,6 @@ public abstract class AbstractLuckPermsPlugin implements LuckPermsPlugin {
         // load configuration
         getLogger().info("Loading configuration...");
         this.configuration = new LuckPermsConfiguration(this, provideConfigurationAdapter());
-
-        // load locale
-        this.localeManager = new LocaleManager();
-        this.localeManager.tryLoad(this, getBootstrap().getConfigDirectory().resolve("lang.yml"));
 
         // setup a bytebin instance
         OkHttpClient httpClient = new OkHttpClient.Builder()
@@ -316,11 +311,6 @@ public abstract class AbstractLuckPermsPlugin implements LuckPermsPlugin {
     }
 
     @Override
-    public LocaleManager getLocaleManager() {
-        return this.localeManager;
-    }
-
-    @Override
     public BytebinClient getBytebin() {
         return this.bytebin;
     }
@@ -371,10 +361,42 @@ public abstract class AbstractLuckPermsPlugin implements LuckPermsPlugin {
     }
 
     private void displayBanner(Sender sender) {
-        sender.sendMessage(Message.colorize("&b       &3 __    "));
-        sender.sendMessage(Message.colorize("&b  |    &3|__)   " + "&2" + getPluginName() + " &bv" + getBootstrap().getVersion()));
-        sender.sendMessage(Message.colorize("&b  |___ &3|      " + "&8Running on " + getBootstrap().getType().getFriendlyName() + " - " + getBootstrap().getServerBrand()));
-        sender.sendMessage("");
+        Component infoLine1 = Component.text()
+                .append(Component.text(getPluginName(), NamedTextColor.DARK_GREEN))
+                .append(Component.space())
+                .append(Component.text("v" + getBootstrap().getVersion(), NamedTextColor.AQUA))
+                .build();
+
+        Component infoLine2 = Component.text()
+                .color(NamedTextColor.DARK_GRAY)
+                .append(Component.text("Running on "))
+                .append(Component.text(getBootstrap().getType().getFriendlyName()))
+                .append(Component.text(" - "))
+                .append(Component.text(getBootstrap().getServerBrand()))
+                .build();
+
+        // "        __    "
+        // "  |    |__)   "
+        // "  |___ |      "
+
+        sender.sendMessage(Component.text()
+                .append(Component.text("       ", NamedTextColor.AQUA))
+                .append(Component.text(" __    ", NamedTextColor.DARK_AQUA))
+                .build()
+        );
+        sender.sendMessage(Component.text()
+                .append(Component.text("  |    ", NamedTextColor.AQUA))
+                .append(Component.text("|__)   ", NamedTextColor.DARK_AQUA))
+                .append(infoLine1)
+                .build()
+        );
+        sender.sendMessage(Component.text()
+                .append(Component.text("  |___ ", NamedTextColor.AQUA))
+                .append(Component.text("|      ", NamedTextColor.DARK_AQUA))
+                .append(infoLine2)
+                .build()
+        );
+        sender.sendMessage(Component.empty());
     }
 
     public static String getPluginName() {

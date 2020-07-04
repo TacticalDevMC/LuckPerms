@@ -23,27 +23,36 @@
  *  SOFTWARE.
  */
 
-package me.lucko.luckperms.common.commands.generic.permission;
+package me.lucko.luckperms.common.command.spec;
 
-import com.google.common.collect.ImmutableList;
+import me.lucko.luckperms.common.locale.message.Message;
 
-import me.lucko.luckperms.common.command.abstraction.GenericChildCommand;
-import me.lucko.luckperms.common.command.abstraction.GenericParentCommand;
-import me.lucko.luckperms.common.command.spec.CommandSpec;
-import me.lucko.luckperms.common.model.HolderType;
-import me.lucko.luckperms.common.model.PermissionHolder;
+import net.kyori.adventure.text.Component;
 
-public class CommandPermission<T extends PermissionHolder> extends GenericParentCommand<T> {
-    public CommandPermission(HolderType type) {
-        super(CommandSpec.PERMISSION, "Permission", type, ImmutableList.<GenericChildCommand>builder()
-                .add(new PermissionInfo())
-                .add(new PermissionSet())
-                .add(new PermissionUnset())
-                .add(new PermissionSetTemp())
-                .add(new PermissionUnsetTemp())
-                .add(new PermissionCheck())
-                .add(new PermissionCheckInherits())
-                .add(new PermissionClear())
-                .build());
+public class Argument {
+    private final String name;
+    private final boolean required;
+    private final Component description;
+
+    Argument(String name, boolean required, Component description) {
+        this.name = name;
+        this.required = required;
+        this.description = description;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public boolean isRequired() {
+        return this.required;
+    }
+
+    public Component getDescription() {
+        return this.description;
+    }
+
+    public Component asPrettyString() {
+        return (this.required ? Message.REQUIRED_ARGUMENT : Message.OPTIONAL_ARGUMENT).build(this.name);
     }
 }

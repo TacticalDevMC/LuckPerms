@@ -32,8 +32,7 @@ import me.lucko.luckperms.common.command.abstraction.ChildCommand;
 import me.lucko.luckperms.common.command.access.CommandPermission;
 import me.lucko.luckperms.common.command.utils.ArgumentList;
 import me.lucko.luckperms.common.commands.migration.MigrationUtils;
-import me.lucko.luckperms.common.locale.LocaleManager;
-import me.lucko.luckperms.common.locale.command.CommandSpec;
+import me.lucko.luckperms.common.command.spec.CommandSpec;
 import me.lucko.luckperms.common.locale.message.Message;
 import me.lucko.luckperms.common.model.Group;
 import me.lucko.luckperms.common.model.PermissionHolder;
@@ -103,8 +102,8 @@ public class MigrationPermissionsEx extends ChildCommand<Object> {
         }
     }
 
-    public MigrationPermissionsEx(LocaleManager locale) {
-        super(CommandSpec.MIGRATION_COMMAND.localize(locale), "permissionsex", CommandPermission.MIGRATION, Predicates.alwaysFalse());
+    public MigrationPermissionsEx() {
+        super(CommandSpec.MIGRATION_COMMAND, "permissionsex", CommandPermission.MIGRATION, Predicates.alwaysFalse());
     }
 
     @Override

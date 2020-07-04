@@ -28,9 +28,9 @@ package me.lucko.luckperms.common.sender;
 import com.google.common.base.Splitter;
 
 import me.lucko.luckperms.common.plugin.LuckPermsPlugin;
-import me.lucko.luckperms.common.util.TextUtils;
 
-import net.kyori.text.Component;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.translation.GlobalTranslationSource;
 import net.luckperms.api.util.Tristate;
 
 import java.lang.ref.WeakReference;
@@ -42,8 +42,6 @@ import java.util.UUID;
  * @param <T> the command sender type
  */
 public final class AbstractSender<T> implements Sender {
-    private static final Splitter NEW_LINE_SPLITTER = Splitter.on("\n");
-
     private final LuckPermsPlugin platform;
     private final SenderFactory<?, T> factory;
     private final WeakReference<T> sender;
@@ -75,30 +73,10 @@ public final class AbstractSender<T> implements Sender {
     }
 
     @Override
-    public void sendMessage(String message) {
-        final T sender = this.sender.get();
-        if (sender != null) {
-
-            // if it is console, split up the lines and send individually.
-            if (isConsole()) {
-                for (String line : NEW_LINE_SPLITTER.split(message)) {
-                    this.factory.sendMessage(sender, line);
-                }
-            } else {
-                this.factory.sendMessage(sender, message);
-            }
-        }
-    }
-
-    @Override
     public void sendMessage(Component message) {
-        if (isConsole()) {
-            sendMessage(TextUtils.toLegacy(message));
-            return;
-        }
-
         final T sender = this.sender.get();
         if (sender != null) {
+            // TODO: handle splitting newlines up into separate messages for console senders
             this.factory.sendMessage(sender, message);
         }
     }

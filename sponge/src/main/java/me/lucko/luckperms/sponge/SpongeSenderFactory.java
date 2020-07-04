@@ -29,8 +29,8 @@ import me.lucko.luckperms.common.sender.Sender;
 import me.lucko.luckperms.common.sender.SenderFactory;
 import me.lucko.luckperms.sponge.service.CompatibilityUtil;
 
-import net.kyori.text.Component;
-import net.kyori.text.adapter.spongeapi.TextAdapter;
+import net.kyori.adventure.platform.spongeapi.SpongeAudiences;
+import net.kyori.adventure.text.Component;
 import net.luckperms.api.util.Tristate;
 
 import org.spongepowered.api.command.CommandSource;
@@ -40,8 +40,11 @@ import org.spongepowered.api.text.serializer.TextSerializers;
 import java.util.UUID;
 
 public class SpongeSenderFactory extends SenderFactory<LPSpongePlugin, CommandSource> {
+    private final SpongeAudiences audiences;
+
     public SpongeSenderFactory(LPSpongePlugin plugin) {
         super(plugin);
+        this.audiences = SpongeAudiences.create(plugin.getBootstrap().getPluginContainer(), plugin.getBootstrap().getGame());
     }
 
     @Override
@@ -61,14 +64,8 @@ public class SpongeSenderFactory extends SenderFactory<LPSpongePlugin, CommandSo
     }
 
     @Override
-    protected void sendMessage(CommandSource source, String s) {
-        //noinspection deprecation
-        source.sendMessage(TextSerializers.LEGACY_FORMATTING_CODE.deserialize(s));
-    }
-
-    @Override
     protected void sendMessage(CommandSource source, Component message) {
-        TextAdapter.sendComponent(source, message);
+        this.audiences.receiver(source).sendMessage(message);
     }
 
     @Override

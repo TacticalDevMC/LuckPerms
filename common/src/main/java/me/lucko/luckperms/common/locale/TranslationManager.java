@@ -23,47 +23,24 @@
  *  SOFTWARE.
  */
 
-package me.lucko.luckperms.common.locale.command;
+package me.lucko.luckperms.common.locale;
 
-import com.google.common.collect.ImmutableList;
+import java.util.Locale;
 
-import me.lucko.luckperms.common.locale.LocaleManager;
-import me.lucko.luckperms.common.locale.message.Message;
+public class TranslationManager {
 
-import org.checkerframework.checker.nullness.qual.Nullable;
+    // TODO: load translations into adventure's global registry
 
-public class Argument {
-    public static Argument create(String name, boolean required, String description) {
-        return new Argument(name, required, description);
+    public static Locale parseLocale(String locale) {
+        if (locale == null) return Locale.ENGLISH;
+
+        String[] parts = locale.split("_", 3);
+        switch (parts.length) {
+            case 1: return parts[0].isEmpty() ? Locale.ENGLISH : new Locale(parts[0]);
+            case 2: return new Locale(parts[0], parts[1]);
+            case 3: return new Locale(parts[0], parts[1], parts[2]);
+            default: return Locale.ENGLISH;
+        }
     }
 
-    public static ImmutableList<Argument> list(Argument... args) {
-        return ImmutableList.copyOf(args);
-    }
-
-    private final String name;
-    private final boolean required;
-    private final String description;
-
-    private Argument(String name, boolean required, String description) {
-        this.name = name;
-        this.required = required;
-        this.description = description;
-    }
-
-    public String asPrettyString(@Nullable LocaleManager localeManager) {
-        return (this.required ? Message.REQUIRED_ARGUMENT : Message.OPTIONAL_ARGUMENT).asString(localeManager, this.name);
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public boolean isRequired() {
-        return this.required;
-    }
-
-    public String getDescription() {
-        return this.description;
-    }
 }

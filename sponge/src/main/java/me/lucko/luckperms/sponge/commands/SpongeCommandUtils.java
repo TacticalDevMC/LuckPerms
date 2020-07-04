@@ -27,8 +27,6 @@ package me.lucko.luckperms.sponge.commands;
 
 import me.lucko.luckperms.common.command.utils.ArgumentException;
 import me.lucko.luckperms.common.command.utils.ArgumentList;
-import me.lucko.luckperms.common.command.utils.MessageUtils;
-import me.lucko.luckperms.common.locale.LocaleManager;
 import me.lucko.luckperms.sponge.service.model.LPSubjectReference;
 
 import net.luckperms.api.context.ContextSet;
@@ -41,14 +39,21 @@ public final class SpongeCommandUtils {
 
     public static Tristate parseTristate(int index, ArgumentList args) throws ArgumentException {
         String s = args.get(index).toLowerCase();
-        if (s.equals("1") || s.equals("true") || s.equals("t")) {
-            return Tristate.TRUE;
-        }
-        if (s.equals("0") || s.equals("null") || s.equals("none") || s.equals("undefined") || s.equals("undef")) {
-            return Tristate.UNDEFINED;
-        }
-        if (s.equals("-1") || s.equals("false") || s.equals("f")) {
-            return Tristate.FALSE;
+        switch (s) {
+            case "1":
+            case "true":
+            case "t":
+                return Tristate.TRUE;
+            case "0":
+            case "null":
+            case "none":
+            case "undefined":
+            case "undef":
+                return Tristate.UNDEFINED;
+            case "-1":
+            case "false":
+            case "f":
+                return Tristate.FALSE;
         }
         throw new ArgumentException.DetailedUsage();
     }
@@ -89,7 +94,8 @@ public final class SpongeCommandUtils {
     }
 
     public static String contextToString(ContextSet set, LocaleManager localeManager) {
-        return MessageUtils.contextSetToString(localeManager, set);
+        // TODOreturn MessageUtils.contextSetToString(localeManager, set);
+        return null;
     }
 
 }

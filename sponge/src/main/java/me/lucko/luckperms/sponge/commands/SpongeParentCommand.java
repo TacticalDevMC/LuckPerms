@@ -33,9 +33,7 @@ import me.lucko.luckperms.common.command.abstraction.ChildCommand;
 import me.lucko.luckperms.common.command.abstraction.Command;
 import me.lucko.luckperms.common.command.abstraction.CommandException;
 import me.lucko.luckperms.common.command.utils.ArgumentList;
-import me.lucko.luckperms.common.command.utils.MessageUtils;
-import me.lucko.luckperms.common.locale.LocaleManager;
-import me.lucko.luckperms.common.locale.command.CommandSpec;
+import me.lucko.luckperms.common.command.spec.CommandSpec;
 import me.lucko.luckperms.common.locale.message.Message;
 import me.lucko.luckperms.common.plugin.LuckPermsPlugin;
 import me.lucko.luckperms.common.sender.Sender;
@@ -57,29 +55,26 @@ public class SpongeParentCommand extends Command<Void> {
     private final Map<String, List<ChildCommand<LPSubjectData>>> children;
 
     public SpongeParentCommand(LPSpongePlugin plugin) {
-        super(CommandSpec.SPONGE.localize(plugin.getLocaleManager()), "Sponge", null, Predicates.alwaysFalse());
-
-        LocaleManager locale = plugin.getLocaleManager();
-
+        super(CommandSpec.SPONGE, "Sponge", null, Predicates.alwaysFalse());
         this.children = ImmutableMap.<String, List<ChildCommand<LPSubjectData>>>builder()
                 .put("permission", ImmutableList.<ChildCommand<LPSubjectData>>builder()
-                        .add(new PermissionInfo(locale))
-                        .add(new PermissionSet(locale))
-                        .add(new PermissionClear(locale))
+                        .add(new PermissionInfo())
+                        .add(new PermissionSet())
+                        .add(new PermissionClear())
                         .build()
                 )
                 .put("parent", ImmutableList.<ChildCommand<LPSubjectData>>builder()
-                        .add(new ParentInfo(locale))
-                        .add(new ParentAdd(locale))
-                        .add(new ParentRemove(locale))
-                        .add(new ParentClear(locale))
+                        .add(new ParentInfo())
+                        .add(new ParentAdd())
+                        .add(new ParentRemove())
+                        .add(new ParentClear())
                         .build()
                 )
                 .put("option", ImmutableList.<ChildCommand<LPSubjectData>>builder()
-                        .add(new OptionInfo(locale))
-                        .add(new OptionSet(locale))
-                        .add(new OptionUnset(locale))
-                        .add(new OptionClear(locale))
+                        .add(new OptionInfo())
+                        .add(new OptionSet())
+                        .add(new OptionUnset())
+                        .add(new OptionClear())
                         .build()
                 )
                 .build();

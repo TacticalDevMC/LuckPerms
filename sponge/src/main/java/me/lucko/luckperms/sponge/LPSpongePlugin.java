@@ -59,6 +59,8 @@ import me.lucko.luckperms.sponge.service.model.ProxiedServiceObject;
 import me.lucko.luckperms.sponge.service.model.persisted.PersistedCollection;
 import me.lucko.luckperms.sponge.tasks.ServiceCacheHousekeepingTask;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.query.QueryOptions;
 
@@ -271,8 +273,8 @@ public class LPSpongePlugin extends AbstractLuckPermsPlugin {
         } else {
             return new DummySender(this, Sender.CONSOLE_UUID, Sender.CONSOLE_NAME) {
                 @Override
-                protected void consumeMessage(String s) {
-                    LPSpongePlugin.this.bootstrap.getPluginLogger().info(s);
+                public void sendMessage(Component message) {
+                    LPSpongePlugin.this.bootstrap.getPluginLogger().info(LegacyComponentSerializer.legacySection().serialize(message));
                 }
             };
         }
